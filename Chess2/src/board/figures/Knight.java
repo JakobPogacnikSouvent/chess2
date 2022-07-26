@@ -2,14 +2,15 @@ package board.figures;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-
 import board.Board;
 import board.Colour;
 import board.Coords;
+import board.Players;
+import board.Square;
 
 public class Knight extends Figure{
-	public Knight(Colour colour) {
-		super(3, colour);
+	public Knight(Colour colour, Players owner) {
+		super(3, colour, owner);
 		
 		// TEMP
 		draw = new char[] {'N'};
@@ -24,6 +25,16 @@ public class Knight extends Figure{
 		
 		// Should never be called. Handle all cases in elifs.
 		return false;	
+	}
+	
+	@Override
+	public boolean isAttacked(Coords from, Coords to, Board gameBoard) {
+		if ((Math.abs(Coords.subtract(to, from).x) == 2 && Math.abs(Coords.subtract(to, from).y) == 1) || (Math.abs(Coords.subtract(to, from).x) == 1 && Math.abs(Coords.subtract(to, from).y) == 2)) {
+			return true;
+		}
+		
+		// Should never be called. Handle all cases in elifs.
+		return false;
 	}
 	
 	@Override
@@ -50,4 +61,29 @@ public class Knight extends Figure{
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void startOfTurn(Coords at, Board gameBoard, Players activePlayer) {
+		// TODO Auto-generated method stub
+		
+		for (Square s : this.getAttackedSquares(at, gameBoard)) {
+			switch (owner) {
+			case P1:
+				s.setAttackedByP1(true);
+				break;
+			case P2:
+				s.setAttackedByP2(true);
+				break;
+			}
+		}	
+	}
+
+	@Override
+	public void endOfTurn(Coords at, Board gameBoard, Players activePlayer) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
 }

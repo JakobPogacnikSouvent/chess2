@@ -84,6 +84,7 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 		List<Coords> legalMoves = null;
 		
 		if (selectedFigure != null) {
+			// TODO: handle en passante and castling separately
 			 legalMoves = selectedFigure.getLegalMoves(selectedFigureCoords, game.getBoard());
 
 		}
@@ -93,9 +94,7 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 				Coords squareZeroVector = Coords.add(boardZeroVector, new Coords(i * squareSize, j * squareSize));
 				
 				Coords c = new Coords(i, j);
-				
-				// Call square.paint
-				
+								
 				if ((i + j) % 2 != 0) {
 					g2.setColor(squareColourSecondary);										
 				} else {
@@ -112,6 +111,10 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 					}
 				}
 				
+				if (game.getBoard().at(c).getAttackedByP1()) {
+					g2.setColor(Color.red);
+				}
+				
 				g2.fillRect(squareZeroVector.x, squareZeroVector.y, squareSize, squareSize);
 				
 			}
@@ -120,8 +123,6 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 		for (int i = 0; i < 8; ++i) {
 			for (int j = 0; j < 8; ++j) {
 				Coords squareZeroVector = Coords.add(boardZeroVector, new Coords(i * squareSize, j * squareSize));
-
-				// figure.paint in square.paint
 				
 				if (!game.getBoard().at(j, i).isEmpty()) {
 					
@@ -136,12 +137,20 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 					Color borderClr;
 					Color fillClr;
 					
-					if (f.getColour() == Colour.BLACK) {
+					switch (f.getColour()) {
+					case BLACK:
 						fillClr = figureColourSecondary;
 						borderClr = figureColourPrimary;						
-					} else {
+						break;
+					case WHITE:
 						fillClr = figureColourPrimary;
 						borderClr = figureColourSecondary;
+						break;
+					
+					default:
+						// Should not be reached. Error colours.
+						fillClr = Color.red;
+						borderClr = Color.black;
 					}
 					
 					if (selectedFigure != null && mouseCoords != null && f == selectedFigure) {
@@ -203,14 +212,14 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 	public void mousePressed(MouseEvent e) {
 		Coords c = Coords.subtract(new Coords(e.getX(), e.getY()), boardZeroVector).divide(squareSize);
 		
-		if (!game.getBoard().at(c).isEmpty()) {
+		if (!game.getBoard().at(c).isEmpty() && game.getBoard().at(c).getFigure().getOwner() == game.getActivePlayer()) {
 			// TODO: Check if figure is of player currently on turn 
 			if (selectedFigure != game.getBoard().at(c).getFigure()) {
 				select = true;				
 			}
-
+			
 			selectedFigureCoords = c;
-			selectedFigure = game.getBoard().at(c).getFigure();
+			selectedFigure = game.getBoard().at(c).getFigure();				
 			
 			
 		} else if (selectedFigure != null) {

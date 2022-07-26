@@ -7,7 +7,7 @@ import board.Game;
 import java.awt.event.*;
 
 @SuppressWarnings("serial")
-public class Okno extends JFrame implements ActionListener {
+public class GameWindow extends JFrame implements ActionListener {
 	
 	protected Platno platno;
 	private JMenuItem menuOdpri, menuShrani, menuKoncaj;
@@ -15,7 +15,7 @@ public class Okno extends JFrame implements ActionListener {
 	private JMenuItem menuBarvaPovezave, menuBarvaTocke, menuBarvaAktivneTocke, menuBarvaIzbraneTocke, menuBarvaRoba;
 	private JMenuItem menuDebelinaRoba, menuDebelinaPovezave;
 	
-	public Okno() {
+	public GameWindow() {
 		super();
 		setTitle("Chess 2");
 		platno = new Platno(800, 800);

@@ -41,6 +41,17 @@ public class Coords {
 		
 		return this;
 	}
+	
+	public static Coords multiply(Coords a, int n) {
+		return new Coords(a.x * n, a.y * n);
+	}
+	
+	public Coords multiply(int n) {
+		x = x * n;
+		y = y * n;
+		
+		return this;
+	}
 
 	public Coords norm() {
 		int newX = 0;

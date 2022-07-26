@@ -2,11 +2,13 @@ package tests;
 
 import javax.swing.WindowConstants;
 
-import gui.GameWindow;
+import gui.StartScreen;
 
-public class GuiTest {
+public class StartMenuTest {
+
 	public static void main(String[] args) {
-		GameWindow okno = new GameWindow();
+		// TODO Auto-generated method stub
+		StartScreen okno = new StartScreen();
 		okno.pack();
 		okno.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		okno.setLocationRelativeTo(null);

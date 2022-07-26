@@ -2,18 +2,27 @@ package board.figures;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-
 import board.Board;
 import board.Colour;
 import board.Coords;
+import board.Players;
+import board.Square;
 
 public class Rook extends Figure{
 	
-	public Rook(Colour colour) {
-		super(5, colour);
+	private boolean moved;
+	
+	public boolean getMoved() {
+		return moved;
+	}
+	
+	public Rook(Colour colour, Players owner) {
+		super(5, colour, owner);
 		
 		// TEMP
 		draw = new char[] {'R'};
+		
+		moved = false;
 	}
 
 	@Override
@@ -35,6 +44,24 @@ public class Rook extends Figure{
 		return false;	
 	}
 
+
+	@Override
+	public boolean isAttacked(Coords from, Coords to, Board gameBoard) {
+		if (Coords.subtract(to, from).x == 0 || Coords.subtract(to, from).y == 0) {
+			
+			Coords n = Coords.subtract(to, from).norm();
+			Coords at = Coords.add(from, n);
+			while (!at.equals(to)) {
+				if (!gameBoard.at(at).isEmpty()) return false;
+				at = Coords.add(at, n);
+			}
+			
+			return true;
+		}
+		
+		// Should never be called. Handle all cases in elifs.
+		return false;	}
+	
 	@Override
 	public String toString() {
 		return "  R  ";
@@ -58,5 +85,29 @@ public class Rook extends Figure{
 	public void moved(Coords from, Coords to, Board gameBoard) {
 		// TODO Auto-generated method stub
 		
+		moved = true;
 	}
+
+	@Override
+	public void startOfTurn(Coords at, Board gameBoard, Players activePlayer) {
+		// TODO Auto-generated method stub
+		
+		for (Square s : this.getAttackedSquares(at, gameBoard)) {
+			switch (owner) {
+			case P1:
+				s.setAttackedByP1(true);
+				break;
+			case P2:
+				s.setAttackedByP2(true);
+				break;
+			}
+		}
+	}
+
+	@Override
+	public void endOfTurn(Coords at, Board gameBoard, Players activePlayer) {
+		// TODO Auto-generated method stub
+	}
+
+
 }
